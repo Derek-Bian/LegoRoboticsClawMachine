@@ -7,7 +7,7 @@ this funcion moves the robot in the x-y axes without checking the motor encoder 
 */
 
 void manual_reset_move(int power){
-    switch(sensorValue(S1)){
+    switch(SensorValue(S1)){
         case 1:
             motor[motorA] = motor[motorD] = power;
         case 2:
@@ -18,7 +18,7 @@ void manual_reset_move(int power){
             motor[motorB] = -power;
     }
 
-    while(sensorValue(S1) != 0)
+    while(SensorValue(S1) != 0)
     {}
 
     motor[motorA] = motor[motorD] = 0;
