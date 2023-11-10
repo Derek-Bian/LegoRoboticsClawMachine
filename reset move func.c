@@ -19,7 +19,6 @@ void manual_reset_move(int power){
     }
 
     while(sensorValue(S1) != 0)
-
     {}
 
     motor[motorA] = motor[motorD] = 0;
