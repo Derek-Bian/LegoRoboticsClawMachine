@@ -26,7 +26,7 @@ task main()
 
 
 	while(true){
-		IR_button_value = sensorValue(S4);
+		IR_button_value = SensorValue(S4);
 		displayString(5, "%i", IR_button_value);
 	}
 
