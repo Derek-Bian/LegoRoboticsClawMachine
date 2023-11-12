@@ -1,28 +1,16 @@
-int move_during_game(int &maxx, int &maxy){
+int move_during_game(int maxx = 0, int maxy = 0, int power = 10){
     switch(SensorValue(S1)){
         case 1:
-            while (nMotorEncoder(motorA) < maxy){
-                motor[motorA] = motor[motorD] = power;
-            }
-            motor[motorA] = motor[motorD] = 0;
+            motor[motorA] = motor[motorD] = power;
         case 2:
-            while (nMotorEncoder(motorA) > 0){
-                motor[motorA] = motor[motorD] = -power;
-            }
-            motor[motorA]= motor[motorD] = 0;
+            motor[motorA] = motor[motorD] = -power;
         case 3:
-            while (nMotorEncoder(motorB) < maxx){
-                motor[motorB] = power;
-            }
-            motor[motorB] = 0;
+            motor[motorB] = power;
         case 4:
-            while (nMotorEncoder(motorB) > 0){
-                motor[motorB] = -power;
-            }
-            motor[motorB] = 0;
+            motor[motorB] = -power;
     }
 
-    while (SensorValue(S1) != 0)
+    while (SensorValue(S1) != 0 && nMotorEncoder(motorA) < maxy && nMotorEncoder(motorA) > 0 && nMotorEncoder(motorB) < maxx && nMotorEncoder(motorB) > 0)
     {}
 
     motor[motorA] = motor[motorB] = motor[motorB] = 0;
