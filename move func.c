@@ -13,5 +13,5 @@ int move_during_game(int maxx = 0, int maxy = 0, int power = 10){
     while (SensorValue(S1) != 0 && nMotorEncoder(motorA) < maxy && nMotorEncoder(motorA) > 0 && nMotorEncoder(motorB) < maxx && nMotorEncoder(motorB) > 0)
     {}
 
-    motor[motorA] = motor[motorB] = motor[motorB] = 0;
+    motor[motorA] = motor[motorB] = motor[motorD] = 0;
 }
