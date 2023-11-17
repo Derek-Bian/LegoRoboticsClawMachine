@@ -1,6 +1,6 @@
 int move_during_game(int max_ad = 0, int max_b = 0, int power = 10){
     int sense = SensorValue(S1);
-		if(sense == 1){
+	if(sense == 1){
 		motor[motorA] = motor[motorD] = power;
     }
     else if(sense == 2){
