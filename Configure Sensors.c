@@ -16,4 +16,6 @@ void configureSensors(){
     wait1Msec(50);
     SensorMode[S3] = modeEV3Color_Color;
     wait1Msec(50);
+
+    time1[T1] = 0;
 }
