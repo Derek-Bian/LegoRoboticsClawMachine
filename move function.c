@@ -19,8 +19,8 @@ int move_during_game(int max_ad = 0, int max_b = 0, int power = 10){
     motor[motorA] = motor[motorB] = motor[motorD] = 0;
     if(SensorValue(S1) == 0){
     	return 0;
-  	}
-  	else{
-  		return 1;
-  	}
+    }
+    else{
+        return 1;
+    }
 }
