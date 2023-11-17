@@ -9,12 +9,12 @@ This code is an initial prototype of a grab object and release object function
 //Constants
 int claw = motor[motorA];
 
-//uses timer 1
+//uses timer 2
 void grab_object(int claw){
-	time1[T1] = 0;
+	time1[T2] = 0;
 	nMotorEncoder[claw] = 0;
 	motor[claw] = -30;
-	while(time1[T1] < 10000)
+	while(time1[T2] < 10000)
 	{}
 	motor[claw] = 0;
 }
