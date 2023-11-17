@@ -14,7 +14,7 @@ void manual_reset_move(int power = 10){
     else if(sense == 2){
     	motor[motorA] = motor[motorD] = -power;
     }
-    else if(sense ==3){
+    else if(sense == 3){
     	motor[motorB] = power;
   	}
   	else if(sense == 4){
@@ -23,6 +23,9 @@ void manual_reset_move(int power = 10){
 
     while(SensorValue(S1) != 0)
     {}
+
+	//counted as active until user releases button
+	time1[T1] = 0;
 
     motor[motorA] = motor[motorB] = motor[motorD] = 0;
 }
