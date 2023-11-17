@@ -6,7 +6,7 @@ int move_during_game(int max_ad = 0, int max_b = 0, int power = 10){
     else if(sense == 2){
     	motor[motorA] = motor[motorD] = -power;
     }
-    else if(sense ==3){
+    else if(sense == 3){
     	motor[motorB] = power;
     }
     else if(sense == 4){
