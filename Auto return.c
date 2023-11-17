@@ -1,4 +1,4 @@
-void a_return(int power){
+void return_to_origin(int power){
     while (nMotorEncoder[motorA] > 0){
         motor[motorA] = motor[motorD] = -power;
     }
