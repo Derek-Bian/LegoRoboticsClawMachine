@@ -20,7 +20,7 @@ int move_during_game(int max_ad = 0, int max_b = 0, int power = 10){
         //checking user input
         if(SensorValue(S1) == 0)
             exit_code = 0;
-        //PLEASE CHANGE THIS WHEN COLIN FINALLY DECIDES TO CONTRIBUTE TO THE ROBOT PROJECT THANK YOU 4EVA
+        //PLEASE CHANGE THIS WHEN COLOR SENSOR FUNCTION ADDED
         else if(false)
             exit_code = 1;
         else if(nMotorEncoder(motorA) < max_ad || nMotorEncoder(motorA) > 0 || nMotorEncoder(motorB) < max_b || nMotorEncoder(motorB) > 0)
