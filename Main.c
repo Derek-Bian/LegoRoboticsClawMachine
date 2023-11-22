@@ -107,7 +107,7 @@ int move_during_game(int max_ad = 0, int max_b = 0, int power = 10){
             exit_code = 0;
         else if(getColorValue() != 0) //color is not green
             exit_code = 1;
-        else if(nMotorEncoder(motorA) < max_ad || nMotorEncoder(motorA) > 0 || nMotorEncoder(motorB) < max_b || nMotorEncoder(motorB) > 0)
+        else if(nMotorEncoder(motorA) > max_ad || nMotorEncoder(motorA) < 0 || nMotorEncoder(motorB) > max_b || nMotorEncoder(motorB) < 0)
             exit_code = 2;
     }
 
@@ -190,7 +190,7 @@ int limit(float &max_ad, float &max_b, int power = 10){
     nMotorEncoder[motorA] = 0;
     nMotorEncoder[motorB] = 0;
 
-    displayString(5, "Press Enter at end...");
+    displayString(5, "Press Enter at end...           ");
     bool exit = false;
     while(!exit){
         manual_reset_move(power);
@@ -285,6 +285,7 @@ task main(){
         if(claw_status == true){
             int movement_return = 0;
             movement_return = move_during_game(max_ad, max_b, power);
+            displayString(7, "%i", movement_return);
             if(movement_return != 0){
                 //exit code of 1 or 2
                 if(movement_return == 1){
@@ -326,6 +327,8 @@ task main(){
         //checks inactivity
         displayString(1, "time: %i", time1[T1]);
         displayString(2, "time: %i", time1[T3]);
+        displayString(3, "%f", max_ad);
+        displayString(4, "%f", max_b);
         if(time1[T1] > MAX_TIME){
             exit_all = true;
         }
