@@ -31,9 +31,9 @@ void configureSensors(){
     SensorType[S2] = sensorEV3_Touch;
     wait1Msec(50);
     SensorType[S3] = sensorEV3_Color;
-    wait1Msec(50);
+    wait1Msec(1500);
     SensorMode[S3] = modeEV3Color_Color;
-    wait1Msec(50);
+    wait1Msec(1500);
 		nMotorEncoder[motorA] = nMotorEncoder[motorB] = nMotorEncoder[motorC] = nMotorEncoder[motorD] = 0;
 
     time1[T1] = 0;
@@ -83,19 +83,21 @@ void ClawGrab(bool close = true){
 2 - Out of bounds
 */
 //Derek
-int move_during_game(int max_ad = 0, int max_b = 0, int power = 10){
+int move_during_game(int max_ad = 0, int max_b = 0, int powerA = 10, int powerD = 10, int powerB = 20){
     int sense = SensorValue(S1);
     if(sense == 1){
-        motor[motorA] = motor[motorD] = power;
+        motor[motorA] = powerA;
+        motor[motorD] = powerD;
     }
     else if(sense == 2){
-    	motor[motorA] = motor[motorD] = -power;
+    	motor[motorA] = -powerA;
+        motor[motorD] = -powerD;
     }
     else if(sense == 3){
-    	motor[motorB] = power;
+    	motor[motorB] = powerB;
     }
     else if(sense == 4){
-        motor[motorB] = -power;
+        motor[motorB] = -powerB;
     }
 
     int exit_code = -1;
@@ -107,7 +109,7 @@ int move_during_game(int max_ad = 0, int max_b = 0, int power = 10){
             exit_code = 0;
         else if(getColorValue() != 0) //color is not green
             exit_code = 1;
-        else if(nMotorEncoder(motorA) < max_ad || nMotorEncoder(motorA) > 0 || nMotorEncoder(motorB) < max_b || nMotorEncoder(motorB) > 0)
+        else if(nMotorEncoder(motorA) > (max_ad + 100) || nMotorEncoder(motorA) < (0 - 100)|| nMotorEncoder(motorB) > (max_b+100) || nMotorEncoder(motorB) < (0-100))
             exit_code = 2;
     }
 
@@ -121,20 +123,22 @@ int move_during_game(int max_ad = 0, int max_b = 0, int power = 10){
 }
 
 //Yiting
-void manual_reset_move(int power = 10){
+void manual_reset_move(int powerA = 10, int powerD = 10, int powerB){
     int sense = SensorValue(S1);
 	if(sense == 1){
-	    motor[motorA] = motor[motorD] = power;
+        motor[motorA] = powerA;
+        motor[motorD] = powerD;
     }
     else if(sense == 2){
-    	motor[motorA] = motor[motorD] = -power;
+    	motor[motorA] = -powerA;
+        motor[motorD] = -powerD;
     }
     else if(sense == 3){
-    	motor[motorB] = power;
-  	}
-  	else if(sense == 4){
-  		motor[motorB] = -power;
-  	}
+    	motor[motorB] = powerB;
+    }
+    else if(sense == 4){
+        motor[motorB] = -powerB;
+    }
 
     while(SensorValue(S1) != 0)
     {}
@@ -147,13 +151,14 @@ void manual_reset_move(int power = 10){
 }
 
 //Colin
-void return_to_origin(int power = 10){
-    motor[motorA] = motor[motorD] = -power;
+void return_to_origin(int powerA = 11, int powerD = 10, int powerB = 20){
+    motor[motorA] = -powerA;
+    motor[motorD] = -powerD;
     while (nMotorEncoder[motorA] > 0)
     {}
     motor[motorA] = motor[motorD] = 0;
 
-    motor[motorB] = -power;
+    motor[motorB] = -powerB;
     while (nMotorEncoder[motorB] > 0)
     {}
     motor[motorB] = 0;
@@ -165,13 +170,13 @@ void return_to_origin(int power = 10){
 1 - timeout
 */
 //Yiting
-int limit(float &max_ad, float &max_b, int power = 10){
+int limit(float &max_ad, float &max_b, int powerA = 10, int powerD = 10, int powerB = 20){
 
     bool at_origin = false;
     //allows user to move to origin until they hit the enter button
     displayString(5, "Press Enter at start...");
     while(!at_origin){
-        manual_reset_move(power);
+        manual_reset_move(powerA, powerD, powerB);
 
         //checks inactivity
         if(time1[T1] > MAX_TIME)
@@ -190,10 +195,10 @@ int limit(float &max_ad, float &max_b, int power = 10){
     nMotorEncoder[motorA] = 0;
     nMotorEncoder[motorB] = 0;
 
-    displayString(5, "Press Enter at end...");
+    displayString(5, "Press Enter at end...           ");
     bool exit = false;
     while(!exit){
-        manual_reset_move(power);
+        manual_reset_move(powerA, powerD, powerB);
         //exits if inactive
         if(time1[T1] > MAX_TIME)
             return 1;
@@ -213,7 +218,7 @@ int limit(float &max_ad, float &max_b, int power = 10){
     max_ad = nMotorEncoder[motorA];
     max_b = nMotorEncoder[motorB];
 
-    return_to_origin(20);
+    return_to_origin(powerA, powerD);
     return 0;
 }
 
@@ -253,7 +258,9 @@ bool test_ir_sensor(){
 }
 
 task main(){
-    int power = 20;
+    int powerA = 40;
+    int powerD = 40;
+    int powerB = 20;
     float max_ad = 0;
     float max_b = 0;
     bool exit_all = false;
@@ -271,11 +278,11 @@ task main(){
 
     //limit will change max_ad and max_b values to max encoder values
     if(exit_all == false){
-        if(limit(max_ad, max_b) != 0){
+        if(limit(max_ad, max_b, powerA, powerD, powerB) != 0){
             //only here if timeout
             exit_all = true;
         }
-        return_to_origin();
+        return_to_origin(40,40);
     }
 
     //start of game:
@@ -284,7 +291,9 @@ task main(){
         //checks if user wants to move, while the move function checks for timer and limits
         if(claw_status == true){
             int movement_return = 0;
-            movement_return = move_during_game(max_ad, max_b, power);
+            movement_return = move_during_game(max_ad, max_b, powerA, powerD);
+            displayString(7, "%i", movement_return);
+            displayString(11, "color sensor: %i", SensorValue(S3));
             if(movement_return != 0){
                 //exit code of 1 or 2
                 if(movement_return == 1){
@@ -293,18 +302,20 @@ task main(){
                         //win
                         //user reached the end
                         displayCenteredBigTextLine(5, "You won!");
-                        exit_all = true;
+                        //exit_all = true;
                     }
                     else{
                         //out of maze
-                        displayString(5, "You took the goose out of the maze.");
+                        displayString(5, "You took the goose out of");
+                        displayString(6, "the maze.");
                         displayCenteredBigTextLine(10, "GAME OVER.");
-                        exit_all = true;
+                        //exit_all = true;
                     }
                 }
                 else {
                     //movment return is 2
-                    displayString(5, "You took the goose out of bounds.");
+                    displayString(5, "You took the goose out of");
+                    displayString(6, "bounds.");
                     displayCenteredBigTextLine(10, "GAME OVER.");
                 }
                 exit_all = true;
@@ -312,7 +323,7 @@ task main(){
         }
         else {
             //claw is closed so no color sensor yet
-            manual_reset_move(power);
+            manual_reset_move(powerA, powerD, powerB);
         }
         //checks for touch sensor
         if(SensorValue(S2)){
@@ -326,6 +337,8 @@ task main(){
         //checks inactivity
         displayString(1, "time: %i", time1[T1]);
         displayString(2, "time: %i", time1[T3]);
+        displayString(3, "%f", max_ad);
+        displayString(4, "%f", max_b);
         if(time1[T1] > MAX_TIME){
             exit_all = true;
         }
